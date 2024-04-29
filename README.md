@@ -11,7 +11,7 @@ To enable Console for your Dragonfly server, follow these simple steps:
         log.Formatter = &logrus.TextFormatter{ForceColors: true}
         log.Level = logrus.DebugLevel
     ```
-   - Enable the console with the initialized Logger instance.
+- Enable the console with the initialized Logger instance.
     ```go
         console.Enable(log)
     ```
