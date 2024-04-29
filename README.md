@@ -1,7 +1,7 @@
 # Console
 
-Console is a library designed for Dragonfly servers, providing enhanced console logging functionality and management. With Console, you can easily enable and customize console logging for your server, allowing for improved debugging and monitoring capabilities.
-Getting Started
+Console is a library designed for Dragonfly servers, enabling the use of commands through command-line
+## Getting Started
 
 To enable Console for your Dragonfly server, follow these simple steps:
 
