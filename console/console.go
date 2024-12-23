@@ -6,12 +6,12 @@ import (
 	"github.com/df-mc/dragonfly/server/world"
 	"github.com/go-gl/mathgl/mgl64"
 	"github.com/sandertv/gophertunnel/minecraft/text"
-	"github.com/sirupsen/logrus"
+	"log/slog"
 	"os"
 	"strings"
 )
 
-func Enable(log *logrus.Logger) {
+func Enable(log *slog.Logger) {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	source := Source{log: log}
@@ -20,7 +20,7 @@ func Enable(log *logrus.Logger) {
 			if t := strings.TrimSpace(scanner.Text()); len(t) > 0 {
 				name := strings.Split(t, " ")[0]
 				if c, ok := cmd.ByAlias(name); ok {
-					c.Execute(strings.TrimPrefix(strings.TrimPrefix(t, name), " "), source)
+					c.Execute(strings.TrimPrefix(strings.TrimPrefix(t, name), " "), source, nil)
 				} else {
 					output := &cmd.Output{}
 					output.Errorf("Unknown command '%s'", name)
@@ -33,7 +33,7 @@ func Enable(log *logrus.Logger) {
 
 // Source is the command source used to execute commands from the console.
 type Source struct {
-	log *logrus.Logger
+	log *slog.Logger
 }
 
 // Name returns the name of console.
