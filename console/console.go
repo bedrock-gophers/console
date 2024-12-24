@@ -2,6 +2,7 @@ package console
 
 import (
 	"bufio"
+	"github.com/df-mc/dragonfly/server"
 	"github.com/df-mc/dragonfly/server/cmd"
 	"github.com/df-mc/dragonfly/server/world"
 	"github.com/go-gl/mathgl/mgl64"
@@ -11,22 +12,24 @@ import (
 	"strings"
 )
 
-func Enable(log *slog.Logger) {
+func Enable(srv *server.Server, log *slog.Logger) {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	source := Source{log: log}
 	go func() {
 		for scanner.Scan() {
-			if t := strings.TrimSpace(scanner.Text()); len(t) > 0 {
-				name := strings.Split(t, " ")[0]
-				if c, ok := cmd.ByAlias(name); ok {
-					c.Execute(strings.TrimPrefix(strings.TrimPrefix(t, name), " "), source, nil)
-				} else {
-					output := &cmd.Output{}
-					output.Errorf("Unknown command '%s'", name)
-					source.SendCommandOutput(output)
+			srv.World().Exec(func(tx *world.Tx) {
+				if t := strings.TrimSpace(scanner.Text()); len(t) > 0 {
+					name := strings.Split(t, " ")[0]
+					if c, ok := cmd.ByAlias(name); ok {
+						c.Execute(strings.TrimPrefix(strings.TrimPrefix(t, name), " "), source, tx)
+					} else {
+						output := &cmd.Output{}
+						output.Errorf("Unknown command '%s'", name)
+						source.SendCommandOutput(output)
+					}
 				}
-			}
+			})
 		}
 	}()
 }
